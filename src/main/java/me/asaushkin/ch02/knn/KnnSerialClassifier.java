@@ -3,23 +3,34 @@ package me.asaushkin.ch02.knn;
 import me.asaushkin.ch02.knn.book.*;
 
 import java.net.URISyntaxException;
+import java.time.Duration;
+import java.time.Instant;
 import java.util.*;
+import java.util.concurrent.atomic.LongAccumulator;
 
-public class KnnClassifier {
+public class KnnSerialClassifier {
 
     private List<? extends Sample> dataSet;
 
     private int k;
+    private boolean parallelSort;
 
-    public KnnClassifier(List<? extends Sample> dataSet, int k) {
+    LongAccumulator execAccumulator = new LongAccumulator((a, b) -> a + b, 0);
+    LongAccumulator sortAccumulator = new LongAccumulator((a, b) -> a + b, 0);
+    LongAccumulator collectAccumulator = new LongAccumulator((a, b) -> a + b, 0);
+
+    public KnnSerialClassifier(List<? extends Sample> dataSet, int k, boolean parallelSort) {
         Objects.requireNonNull(dataSet);
 
         this.dataSet = dataSet;
         this.k = k;
+        this.parallelSort = parallelSort;
     }
 
     public String classify(Sample example) {
         Distance []distances = new Distance[dataSet.size()];
+
+        Instant start = Instant.now();
 
         int i = 0;
         for (Sample localExample : dataSet) {
@@ -29,7 +40,16 @@ public class KnnClassifier {
             i++;
         }
 
-        Arrays.sort(distances);
+        Instant beginSort = Instant.now();
+        execAccumulator.accumulate(Duration.between(start, beginSort).getNano());
+
+        if (parallelSort)
+            Arrays.parallelSort(distances);
+        else
+            Arrays.sort(distances);
+
+        Instant beginCollect = Instant.now();
+        sortAccumulator.accumulate(Duration.between(beginSort, beginCollect).getNano());
 
         Map<String, Integer> result = new HashMap<>();
 
@@ -38,7 +58,12 @@ public class KnnClassifier {
             result.merge(localExample.getTag(), 1, (a, b) -> a + b);
         }
 
-        return Collections.max(result.entrySet(), Map.Entry.comparingByValue()).getKey();
+        String key = Collections.max(result.entrySet(), Map.Entry.comparingByValue()).getKey();
+
+        Instant end = Instant.now();
+        collectAccumulator.accumulate(Duration.between(beginCollect, end).getNano());
+
+        return key;
     }
 
     public static void main(String[] args) throws URISyntaxException {
@@ -56,7 +81,7 @@ public class KnnClassifier {
         if (args.length > 0)
             k = Integer.parseInt(args[0]);
 
-        KnnClassifier classifier = new KnnClassifier(train, k);
+        KnnSerialClassifier classifier = new KnnSerialClassifier(train, k, false);
         try {
             Date start, end;
             start = new Date();
@@ -76,10 +101,15 @@ public class KnnClassifier {
         }
         System.out.println("******************************************");
         System.out.println("Serial Classifier - K: " + k);
+        System.out.println("Is parallel sort: " + classifier.parallelSort);
         System.out.println("Success: " + success);
         System.out.println("Mistakes: " + mistakes);
-        System.out.println("Execution Time: " + (currentTime / 1000)
-                + " seconds.");
+        System.out.println("Execution Time: " + (currentTime / 1000) + " seconds.");
+
+        System.out.println("Task execution time: " + classifier.execAccumulator.doubleValue()/1_000_000_000 + " seconds.");
+        System.out.println("Sort time: " + classifier.sortAccumulator.doubleValue()/1_000_000_000 + " seconds.");
+        System.out.println("Collect time: " + classifier.collectAccumulator.doubleValue()/1_000_000_000 + " seconds.");
+
         System.out.println("******************************************");
     }
 }

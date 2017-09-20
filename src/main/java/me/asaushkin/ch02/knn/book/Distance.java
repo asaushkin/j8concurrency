@@ -26,14 +26,14 @@ public class Distance implements Comparable<Distance> {
 	@Override
 	public int compareTo(Distance other) {
 
-//		return (int) (this.distance - other.distance);
+		return (int)this.distance - (int)other.distance;
 
-		if (this.distance < other.getDistance()) {
-			return -1;
-		} else if (this.distance > other.getDistance()) {
-			return 1;
-		}
-		return 0;
+//		if (this.distance < other.getDistance()) {
+//			return -1;
+//		} else if (this.distance > other.getDistance()) {
+//			return 1;
+//		}
+//		return 0;
 	}
 
 	/**

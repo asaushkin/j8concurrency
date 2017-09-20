@@ -18,12 +18,17 @@ import java.util.List;
  */
 public class BankMarketingLoader {
 
+    public static List<BankMarketing> load (String dataPath) throws URISyntaxException {
+        return load(dataPath, Integer.MAX_VALUE);
+    }
+
+
 	/**
 	 * Method that loads the examples of the Bank Marketing data set from a file
 	 * @param dataPath Path to the file where the data items are stored
 	 * @return List of BankMarketing examples
 	 */
-	public static List<BankMarketing> load (String dataPath) throws URISyntaxException {
+	public static List<BankMarketing> load (String dataPath, int maxLines) throws URISyntaxException {
 
 		//Path file=Paths.get(dataPath);
 
@@ -36,7 +41,12 @@ public class BankMarketingLoader {
 		) {
 
 			    String line = null;
+			    int lineCount = 0;
 			    while ((line = reader.readLine()) != null) {
+
+			        if (++lineCount > maxLines)
+			            break;
+
 			    	String data[]=line.split(";");
 			    	BankMarketing dataObject=new BankMarketing();
 			    	dataObject.setData(data);

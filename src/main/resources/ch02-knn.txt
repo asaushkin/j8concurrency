@@ -1,0 +1,79 @@
+Train: 39129
+Test: 2059
+******************************************
+Parallel Fine Grained Classifier - K: 10
+Is parallel: false
+Success: 1871
+Mistakes: 188
+Execution Time: 50.879 seconds.
+Task execution time: 35.152 seconds.
+Sort time: 15.65 seconds.
+Collect time: 0.038 seconds.
+******************************************
+
+Train: 39129
+Test: 2059
+******************************************
+Parallel Fine Grained Classifier - K: 10
+Is parallel sort: true
+Success: 1871
+Mistakes: 188
+Execution Time: 41.515 seconds.
+Task time 34: execution.108 seconds.
+Sort time: 7.317 seconds.
+Collect time: 0.048 seconds.
+******************************************
+
+
+Train: 39129
+Test: 2059
+******************************************
+Serial Classifier - K: 10
+Is parallel sort: false
+Success: 1871
+Mistakes: 188
+Execution Time: 42.574 seconds.
+Task execution time: 27.038 seconds.
+Sort time: 15.478 seconds.
+Collect time: 0.032 seconds.
+******************************************
+
+Train: 39129
+Test: 2059
+******************************************
+Serial Classifier - K: 10
+Is parallel sort: true
+Success: 1871
+Mistakes: 188
+Execution Time: 32.838 seconds.
+Task execution time: 25.374 seconds.
+Sort time: 7.396 seconds.
+Collect time: 0.045 seconds.
+******************************************
+
+Train: 39129
+Test: 2059
+******************************************
+Parallel Coarse Grained Classifier - K: 10
+Is parallel sort: false
+Success: 1871
+Mistakes: 188
+Execution Time: 27.89 seconds.
+Task execution time: 12.574 seconds.
+Sort time: 15.234 seconds.
+Collect time: 0.042 seconds.
+Total tasks: 8236
+******************************************
+
+Train: 39129
+Test: 2059
+******************************************
+Parallel Coarse Grained Classifier - K: 10
+Is parallel sort: true
+Success: 1871
+Mistakes: 188
+Execution Time: 19.822 seconds.
+Task execution time: 12.308 seconds.
+Sort time: 7.419 seconds.
+Collect time: 0.039 seconds.
+******************************************
