@@ -34,14 +34,14 @@ public class KnnCoarseGrainedClassifier {
 
     LongAdder execCount = new LongAdder();
 
-    public KnnCoarseGrainedClassifier(List<? extends Sample> dataSet, int k, boolean parallelSort) {
+    public KnnCoarseGrainedClassifier(List<? extends Sample> dataSet, int k, boolean parallelSort, ExecutorService executor) {
         Objects.requireNonNull(dataSet);
 
         this.dataSet = dataSet;
         this.k = k;
 
         this.parallelSort = parallelSort;
-        this.executor = Executors.newFixedThreadPool(numThreads);
+        this.executor = executor == null ? Executors.newFixedThreadPool(numThreads) : executor;
     }
 
     class GroupDistanceTask implements Runnable {
@@ -147,7 +147,7 @@ public class KnnCoarseGrainedClassifier {
         if (args.length > 0)
             k = Integer.parseInt(args[0]);
 
-        KnnCoarseGrainedClassifier classifier = new KnnCoarseGrainedClassifier(train, k, false);
+        KnnCoarseGrainedClassifier classifier = new KnnCoarseGrainedClassifier(train, k, false, null);
         try {
             Date start, end;
             start = new Date();

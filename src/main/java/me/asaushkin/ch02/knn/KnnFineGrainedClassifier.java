@@ -32,14 +32,15 @@ public class KnnFineGrainedClassifier {
 
     LongAdder execCount = new LongAdder();
 
-    public KnnFineGrainedClassifier(List<? extends Sample> dataSet, int k, boolean parallelSort) {
+    public KnnFineGrainedClassifier(List<? extends Sample> dataSet, int k,
+                                    boolean parallelSort, ExecutorService executor) {
         Objects.requireNonNull(dataSet);
 
         this.dataSet = dataSet;
         this.k = k;
 
         this.parallelSort = parallelSort;
-        this.executor = Executors.newFixedThreadPool(numThreads);
+        this.executor = executor == null ? Executors.newFixedThreadPool(numThreads) : executor;
     }
 
     class IndividualDistanceTask implements Runnable {
@@ -123,7 +124,7 @@ public class KnnFineGrainedClassifier {
         if (args.length > 0)
             k = Integer.parseInt(args[0]);
 
-        KnnFineGrainedClassifier classifier = new KnnFineGrainedClassifier(train, k, true);
+        KnnFineGrainedClassifier classifier = new KnnFineGrainedClassifier(train, k, true, null);
         try {
             Date start, end;
             start = new Date();
