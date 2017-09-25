@@ -31,7 +31,7 @@ public class Logger {
 	/**
 	 * Route to the file where we will write the log
 	 */
-	private static final String LOG_FILE = Paths.get("output", "server.log").toString();
+	private static final String LOG_FILE = Paths.get("/tmp", "server.log").toString();
 
 	/**
 	 * Block of code that initializes the Log task

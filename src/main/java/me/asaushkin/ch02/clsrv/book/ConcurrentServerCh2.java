@@ -14,7 +14,7 @@ import java.util.concurrent.TimeUnit;
  * @author author
  *
  */
-public class ConcurrentServer {
+public class ConcurrentServerCh2 {
 
 	/**
 	 * Executor to execute the commands of the server
@@ -24,7 +24,7 @@ public class ConcurrentServer {
 	/**
 	 * Cache to get a better performance
 	 */
-	private static ParallelCache cache;
+	private static volatile ParallelCache cache;
 	
 	/**
 	 * Socket to read the requests of the clients
@@ -58,7 +58,7 @@ public class ConcurrentServer {
 			do {
 				try {
 					Socket clientSocket = serverSocket.accept();
-					RequestTask task = new RequestTask(clientSocket);
+					RequestTask task = new RequestTask(clientSocket, cache);
 					executor.execute(task);
 				} catch (IOException e) {
 					e.printStackTrace();
@@ -88,9 +88,9 @@ public class ConcurrentServer {
 	 * 
 	 * @return The cache
 	 */
-	public static ParallelCache getCache() {
-		return cache;
-	}
+//	public static ParallelCache getCache() {
+//		return cache;
+//	}
 
 	/**
 	 * Methods that finish the execution of the server

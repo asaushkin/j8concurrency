@@ -4,7 +4,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.*;
 
-abstract public class ProxyExecutorService implements ExecutorService {
+public class ProxyExecutorService implements ExecutorService {
 
     private final ExecutorService target;
 

@@ -18,12 +18,15 @@ public class RequestTask implements Runnable {
 	 */
 	private Socket clientSocket;
 
+	private ParallelCache cache;
+
 	/**
 	 * Constructor of the class
 	 * @param clientSocket socket to communicate
 	 */
-	public RequestTask(Socket clientSocket) {
+	public RequestTask(Socket clientSocket, ParallelCache cache) {
 		this.clientSocket = clientSocket;
+		this.cache = cache;
 	}
 
 	@Override
@@ -40,7 +43,6 @@ public class RequestTask implements Runnable {
 			String line = in.readLine();
 			
 			Logger.sendMessage(line);
-			ParallelCache cache = ConcurrentServer.getCache();
 			String ret = cache.get(line);
 			
 			if (ret == null) {
@@ -57,7 +59,7 @@ public class RequestTask implements Runnable {
 					command = new Command.ConcurrentReportCommand(commandData);
 				} else if (commandData[0].equals("s")) {
 					System.err.println("Status");
-					command = new Command.ConcurrentStatusCommand(commandData);
+					command = new Command.ConcurrentStatusCommand(commandData, cache);
 				} else if (commandData[0].equals("z")) {
 					System.err.println("Stop");
 					command = new Command.ConcurrentStopCommand(commandData);

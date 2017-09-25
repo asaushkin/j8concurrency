@@ -1,5 +1,7 @@
 package me.asaushkin.ch02.clsrv.book;
 
+import me.asaushkin.ch03.ConcurrentServerCh3;
+
 import java.net.URISyntaxException;
 import java.util.concurrent.ThreadPoolExecutor;
 
@@ -201,13 +203,17 @@ public abstract class Command {
      */
     public static class ConcurrentStatusCommand extends Command {
 
+        private ParallelCache cache;
+
         /**
          * Constructor of the class
          * @param command String that represents the command
+         * @param cache
          */
-        public ConcurrentStatusCommand (String[] command) {
+        public ConcurrentStatusCommand(String[] command, ParallelCache cache) {
             super(command);
             setCacheable(false);
+            this.cache = cache;
         }
 
 
@@ -217,7 +223,9 @@ public abstract class Command {
          */
         public String execute() {
             StringBuilder sb=new StringBuilder();
-            ThreadPoolExecutor executor=ConcurrentServer.getExecutor();
+
+            // FIXME
+            ThreadPoolExecutor executor= ConcurrentServerCh3.getExecutor();
 
             sb.append("Server Status;");
             sb.append("Actived Threads: ");
@@ -245,7 +253,7 @@ public abstract class Command {
             sb.append(String.valueOf(executor.getQueue().size()));
             sb.append(";");
             sb.append("Cache Size: ");
-            sb.append(String.valueOf(ConcurrentServer.getCache().getItemCount()));
+            sb.append(String.valueOf(cache.getItemCount()));
             sb.append(";");
             Logger.sendMessage(sb.toString());
             return sb.toString();
@@ -316,7 +324,9 @@ public abstract class Command {
          * Method that executes the command
          */
         public String execute() {
-            ConcurrentServer.shutdown();
+            // FIXME: Change the shutdown method between ConcurrentServerCh2 and ConcurrentServerCh3 classes
+            ConcurrentServerCh3.shutdown();
+
             return "Server stopped";
         }
 
