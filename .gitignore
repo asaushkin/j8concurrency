@@ -1,3 +1,5 @@
+# This file size is near 157M so exclude it from a git index.
+/src/main/resources/WDI_Data.csv
 
 # Created by https://www.gitignore.io/api/java,gradle,intellij
 
